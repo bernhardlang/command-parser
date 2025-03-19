@@ -1,0 +1,29 @@
+{
+    "name": "command-parser",
+    "version": "1.0.0",
+    "description": "simple command parser for Serial / SerialUSB like devices",
+    "keywords": "command parser, Arduino",
+    "repository":
+    {
+        "type": "git",
+        "url": "https://github.com/bernhardlang/command-parser.git"
+    },
+    "authors":
+    [
+        {
+            "name": "Bernhard Lang",
+            "email": "bernhard.lang@gmx.ch",
+            "url": "www.bernhard-lang.net",
+            "maintainer": true
+        },
+        {
+            "name": "Dominique Lovy"
+        }
+    ],
+    "licence": "GPL2",
+    "homepage": "http://nowhere.x",
+    "dependencies": {
+    },
+    "frameworks": "*",
+    "platforms": "*"
+}
