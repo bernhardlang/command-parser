@@ -1,20 +1,10 @@
 /* generic-commands.cpp
  *
- * Copyright (C) 2018 Bernhard Lang, www.b-lang.ch
+ * Copyright (C) 2018-2025 Bernhard Lang, www.bernhard-lang.net
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or (at
- * your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * the Free Software Foundation; version 2 of the License.
  */
 
 #include <Arduino.h>
@@ -22,7 +12,6 @@
 #include "generic-commands.h"
 
 #ifdef ARDUINO_SAM_DUE
-# define MAXDAC 2
 # define MAX_PIN 54
 #else
 # include <avr/wdt.h>
@@ -70,6 +59,10 @@ BEGIN_ERRORS(generic)
   { er_invalid_dac, "invalid DAC number" },
   { er_no_error, ""},
 END_ERRORS(generic);
+
+void init_generic_commands(void) {
+  static c_generic_commands g_cmds;
+}
 
 #ifdef ARDUINO_SAM_DUE
 

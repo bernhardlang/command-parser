@@ -32,8 +32,8 @@
 /*                   functions used in state machine table                    */
 /******************************************************************************/
 
-// To be reusable the table of the state machine cannot hold methods of
-// objects. The functions defined here are simple wrappers calling the
+// The table of the state machine cannot hold methods of objects.
+// The functions defined here are simple wrappers calling the
 // corresponding methods in the comannd parser object.
 
 uint8_t add_char(char c, void *data) {
