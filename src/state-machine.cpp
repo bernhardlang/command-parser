@@ -20,7 +20,7 @@ c_state_machine::c_state_machine(const transition_t *_transitions,
 
 #ifdef ARDUINO_SAM_DUE
 uint8_t c_state_machine::step(char c, void *data) {
-  uint8_t i, result;
+  uint8_t i, result = 0;
   char char_to_match;
 
   for (i = 0; transitions[i].from >= 0; i++) {
