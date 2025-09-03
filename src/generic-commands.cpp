@@ -22,7 +22,7 @@ unsigned long loop_counter;  // main loop counter
 unsigned long loop_time = 0; // main loop last time
 unsigned long loop_dur = 0;  // main loop last duration
 
-BEGIN_COMMANDS(generic)
+LIST_COMMANDS(generic) {
   {"*IDN?",   ident,       0, 0, "Ask for identification string"},
   {"++ver",   ident,       0, 0, "idem, but serial gpib compatible"},
   {"ver",     identver,    0, 0, "Ask for firmware version"},
@@ -51,7 +51,7 @@ BEGIN_COMMANDS(generic)
   // up arrow = redo prev command
   {"[A[A",    NULL,        0, 0, "(up arrow 2x) Redo before last command"},
   // up arrow twice = redo prev prev command
-END_COMMANDS(generic);
+};
 
 BEGIN_ERRORS(generic)
   { er_invalid_pin, "invalid arduino pin number" },

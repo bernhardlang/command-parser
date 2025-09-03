@@ -56,7 +56,7 @@ const uint16_t er_invalid_dac     = 104;
 typedef struct {
   uint16_t code;
   const char msg[MAX_ERROR_LEN+1];
-} error_t;
+} cmd_error_t;
 
 extern const char *application_name;
 extern const uint8_t application_version;
@@ -109,7 +109,7 @@ class c_command_parser {
 
   //! register a set of commands.
   static void register_commands(const command_t *commands, uint8_t n_commands,
-				const error_t *errors, uint8_t n_errors);
+				const cmd_error_t *errors, uint8_t n_errors);
   
   bool begin(const c_command_parser::param_t *);
   //! When echoing is on, each received character is immediately sent back.
@@ -167,10 +167,10 @@ class c_command_parser {
   static uint8_t num_commands[];
   static uint8_t num_errors[];
   static const uint8_t max_command_tables;
-  static const error_t *error_tables[];
+  static const cmd_error_t *error_tables[];
   static const transition_t transitions[];
   static const command_t commands[];
-  static const error_t error_messages[];
+  static const cmd_error_t error_messages[];
   static int8_t cmd_parser_commands_registered;
 
   Stream &stream;
@@ -193,20 +193,30 @@ int8_t echo(uint8_t argc, char **argv, c_command_parser *);
 int8_t termchar(uint8_t argc, char **argv, c_command_parser *);
 
 
+#define DECLARE_COMMANDS(name)                               \
+class c_##name##_commands {                                 \
+ public:                                                    \
+  c_##name##_commands(void);				    \
+ private:                                                   \
+  static const command_t commands[];                        \
+  static const cmd_error_t errors[];                        \
+};
+#define LIST_COMMANDS(name) \
+const command_t c_##name##_commands::commands[] PROGMEM =
+
+
 #define BEGIN_COMMANDS(name)                                \
 class c_##name##_commands {                                 \
  public:                                                    \
   c_##name##_commands(void);				    \
  private:                                                   \
   static const command_t commands[];                        \
-  static const error_t errors[];                            \
+  static const cmd_error_t errors[];                        \
 };                                                          \
-const command_t c_##name##_commands::commands[] PROGMEM = {
-
-#define END_COMMANDS(name) }; c_##name##_commands name##_commands \
+const command_t c_##name##_commands::commands[] PROGMEM =
 
 #define BEGIN_ERRORS(name) \
-  const error_t c_##name##_commands::errors[] PROGMEM = {
+  const cmd_error_t c_##name##_commands::errors[] PROGMEM = {
 
 #ifdef ARDUINO_SAM_DUE
 # define DUMMY_ERROR { 0, "" }
@@ -218,16 +228,18 @@ const command_t c_##name##_commands::commands[] PROGMEM = {
 c_##name##_commands::c_##name##_commands(void) {                               \
 c_command_parser::register_commands(commands,                                  \
 				    sizeof(commands) / sizeof(command_t),      \
-				    errors, sizeof(errors) / sizeof(error_t)); \
+			    errors, sizeof(errors) / sizeof(cmd_error_t)); \
 }
 
 #define NO_ERRORS(name) BEGIN_ERRORS(name) END_ERRORS(name)
 
-#define IMPLEMENT_COMMANDS(MAX_command_tables)                               \
+#define IMPLEMENT_COMMANDS(name) c_##name##_commands name##_commands;
+
+#define ALLOCATE_COMMAND_TABLES(MAX_command_tables)                          \
   const command_t *c_command_parser::command_tables[MAX_command_tables+2];   \
   uint8_t c_command_parser::num_commands[MAX_command_tables+2];              \
   uint8_t c_command_parser::num_errors[MAX_command_tables+2];                \
-  const error_t *c_command_parser::error_tables[MAX_command_tables+2];       \
+  const cmd_error_t *c_command_parser::error_tables[MAX_command_tables+2];   \
   const uint8_t c_command_parser::max_command_tables = MAX_command_tables+2;
 
 #endif // _command_parser_h_

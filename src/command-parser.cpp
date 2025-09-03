@@ -153,7 +153,7 @@ const command_t c_command_parser::commands[] PROGMEM = {
    "get/set term. char (0=None|1=LF|2=CR|3=LFCR)"}
 };
 
-const error_t c_command_parser::error_messages[] PROGMEM = {
+const cmd_error_t c_command_parser::error_messages[] PROGMEM = {
   { er_overflow,           "command line too long" },
   { er_too_few_arguments,  "too few arguments" },
   { er_too_many_arguments, "too many arguments" },
@@ -181,7 +181,8 @@ c_command_parser::c_command_parser(Stream &_stream)
   before_previous_command = command_buffers + 2;
   if (!cmd_parser_commands_registered) {
     register_commands(commands, sizeof(commands) / sizeof(command_t),
-		      error_messages, sizeof(error_messages) / sizeof(error_t));
+		      error_messages,
+                      sizeof(error_messages) / sizeof(cmd_error_t));
     cmd_parser_commands_registered = 1;
   }
 #ifdef DEBUG_PARSER
@@ -208,7 +209,7 @@ bool c_command_parser::begin(const c_command_parser::param_t *_params) {
 }
 
 void c_command_parser::register_commands(const command_t *commands, uint8_t nc,
-					 const error_t *errors, uint8_t ne) {
+					 const cmd_error_t *errors, uint8_t ne) {
   if (num_command_tables < max_command_tables) {
     command_tables[num_command_tables] = commands;
     error_tables[num_command_tables] = errors;
@@ -611,7 +612,7 @@ uint8_t c_command_parser::print_error(uint8_t code) {
   uint8_t i, j;
 #ifndef ARDUINO_SAM_DUE
   uint8_t _code;
-  const error_t *pe;
+  const cmd_error_t *pe;
 #endif
   if (!code) code = error_code;
   error_code = 0;

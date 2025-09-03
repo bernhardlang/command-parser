@@ -10,7 +10,9 @@
 #ifndef _generic_commands_h_
 #define _generic_commands_h_
 
-class c_command_parser;
+#include "command-parser.h"
+
+DECLARE_COMMANDS(generic);
 
 extern unsigned long loop_counter;
 
